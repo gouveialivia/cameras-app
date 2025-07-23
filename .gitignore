@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ambiente virtual
+venv/
+.venv/
+
+# Arquivos de log e cache
+*.log
+*.sqlite3
+*.db
+*.bak
+*.tmp
+*.cache
+*.pytest_cache/
+*.mypy_cache/
+
+# Config do editor
+.vscode/
+.idea/
