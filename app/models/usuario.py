@@ -18,3 +18,4 @@ class Usuario(Base):
     data_de_nascimento = Column(String, nullable=False)
 
     mensagens = relationship("Mensagem", back_populates="usuario")
+    postagens = relationship("Postagem", back_populates="usuario")
