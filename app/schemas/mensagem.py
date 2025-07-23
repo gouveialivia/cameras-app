@@ -8,7 +8,7 @@ class MensagemCreate(MensagemBase):
     usuario_id: int 
 
 class MensagemUpdate(MensagemBase):
-    pass
+    mensagem: str
 
 class MensagemOut(MensagemBase):
     id: int
