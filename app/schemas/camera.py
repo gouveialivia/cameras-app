@@ -1,21 +1,17 @@
-from pydantic import BaseModel, validator
-
+from pydantic import BaseModel, Field
 
 class CameraBase(BaseModel):
     nome: str
+    ip: str 
 
-class CameraCreate(BaseModel):
-    nome: str
-    toten_id: str
-
-class CameraResponse(BaseModel):
-    id: int
-    nome: str
+class CameraCreate(CameraBase):
     toten_id: int
 
+class CameraUpdate(CameraBase):
+    toten_id: int
+
+class CameraResponse(CameraBase):
+    id: int
+    toten_id: int
     class Config:
         from_attributes = True
-
-class CameraUpdate (BaseModel):
-    nome: str
-    toten_id: str

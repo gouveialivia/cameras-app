@@ -18,10 +18,24 @@ protected_router = APIRouter(prefix="/api", dependencies=[Depends(oauth2_scheme)
 
 @router.post("/registrar", response_model=UsuarioResponse, tags=["Usuario"])
 def registrar(usuario: UsuarioRegister, db: Session = Depends(get_db)):
-    existe = db.query(Usuario).filter(Usuario.username == usuario.username).first()
-    if existe:
+    existe_usuario = db.query(Usuario).filter(Usuario.username == usuario.username).first()
+    if existe_usuario:
         raise HTTPException(status_code=400, detail="Usuário já existe")
-    novo_usuario = Usuario(username=usuario.username, password=usuario.password)
+
+    existe_email = db.query(Usuario).filter(Usuario.email == usuario.email).first()
+    if existe_email:
+        raise HTTPException(status_code=400, detail="Email já cadastrado")
+
+    novo_usuario = Usuario(
+        username=usuario.username,
+        password=usuario.password,  
+        nome=usuario.nome,
+        email=usuario.email,
+        celular=usuario.celular,
+        endereco=usuario.endereco,
+        cep=usuario.cep,
+        data_de_nascimento=usuario.data_de_nascimento
+    )
     db.add(novo_usuario)
     db.commit()
     db.refresh(novo_usuario)
@@ -35,8 +49,12 @@ def pegar(id: int, db: Session = Depends(get_db)):
     return usuario
 
 @router.post("/login", response_model=TokenResponse, tags=["Usuario"])
-def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    if not authenticate(username=form_data.username, password=form_data.password):
+def login(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
+    usuario = authenticate(username=form_data.username, password=form_data.password, db=db)
+    if not usuario:
         raise HTTPException(status_code=401, detail="Usuário ou senha inválidos")
 
     token = criar_token_acesso(form_data.username)
@@ -44,7 +62,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 
 @protected_router.post("/cameras", response_model=CameraResponse, tags=["Camera"])
 def criar_camera(cameracreate: CameraCreate, db: Session = Depends(get_db)):
-    nova_camera = Camera(nome=cameracreate.nome, toten_id=cameracreate.toten_id)
+    nova_camera = Camera(nome=cameracreate.nome, ip=cameracreate.ip, toten_id=cameracreate.toten_id)
     db.add(nova_camera)
     db.commit()
     db.refresh(nova_camera)
@@ -56,6 +74,7 @@ def atualizar_camera(id: int, cameraupdate: CameraUpdate, db: Session = Depends(
     if not camera:
         raise HTTPException(status_code=404, detail="Câmera não encontrada")
     camera.nome = cameraupdate.nome
+    camera.ip = cameraupdate.ip
     camera.toten_id = cameraupdate.toten_id
     db.commit()
     db.refresh(camera)

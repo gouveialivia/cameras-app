@@ -8,5 +8,6 @@ class Camera(Base):
     id = Column(Integer, primary_key=True)
     nome = Column(String, nullable=False)
     toten_id = Column(Integer, ForeignKey("totens.id"))
+    ip = Column(String, nullable=False)
 
     toten = relationship("Toten", back_populates="cameras")
