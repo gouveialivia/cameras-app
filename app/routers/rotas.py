@@ -21,21 +21,12 @@ def registrar(usuario: UsuarioRegister, db: Session = Depends(get_db)):
     existe_usuario = db.query(Usuario).filter(Usuario.username == usuario.username).first()
     if existe_usuario:
         raise HTTPException(status_code=400, detail="Usuário já existe")
-
     existe_email = db.query(Usuario).filter(Usuario.email == usuario.email).first()
     if existe_email:
         raise HTTPException(status_code=400, detail="Email já cadastrado")
-
-    novo_usuario = Usuario(
-        username=usuario.username,
-        password=usuario.password,  
-        nome=usuario.nome,
-        email=usuario.email,
-        celular=usuario.celular,
-        endereco=usuario.endereco,
-        cep=usuario.cep,
-        data_de_nascimento=usuario.data_de_nascimento
-    )
+    novo_usuario = Usuario(username=usuario.username, password=usuario.password,  
+        nome=usuario.nome, email=usuario.email, celular=usuario.celular,
+        endereco=usuario.endereco, cep=usuario.cep, data_de_nascimento=usuario.data_de_nascimento)
     db.add(novo_usuario)
     db.commit()
     db.refresh(novo_usuario)
