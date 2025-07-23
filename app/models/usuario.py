@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from app.db.database import Base
+from sqlalchemy.orm import relationship
+
 
 class Usuario(Base):
     __tablename__ = "usuarios"
@@ -14,3 +16,5 @@ class Usuario(Base):
     endereco = Column(String, nullable=False)
     cep = Column(String, nullable=False)
     data_de_nascimento = Column(String, nullable=False)
+
+    mensagens = relationship("Mensagem", back_populates="usuario")
