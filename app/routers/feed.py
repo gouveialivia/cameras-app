@@ -34,7 +34,6 @@ def obter_postagem(id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Postagem não encontrada")
     return postagem
 
-
 @protected_router.get("/postagens", response_model=list[PostagemOut], tags=["Postagem"])
 def listar_postagens(db: Session = Depends(get_db)):
     return db.query(Postagem).all()
