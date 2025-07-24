@@ -5,14 +5,23 @@ from sqlalchemy import pool
 
 from alembic import context
 
+from app.db.database import Base
+
+#importando o base pra o alembic criar as models tudo certin
+from app.models.mensagem import Mensagem
+from app.models.toten import Toten
+from app.models.usuario import Usuario
+from app.models.camera import Camera
+from app.models.feed import Postagem
+from app.models.assinatura import Assinatura
 
 config = context.config
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-target_metadata = None
-
+#target_metadata = None
+target_metadata = Base.metadata
 
 def run_migrations_offline() -> None:
     url = config.get_main_option("sqlalchemy.url")
